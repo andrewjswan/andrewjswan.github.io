@@ -1,0 +1,42 @@
+name: Build and Update Pages
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build Pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Check out Repo
+        uses: actions/checkout@v6
+
+      - name: 🎭 Setup Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+
+      - name: 📦 Install mkDocs
+        run: pip install mkdocs-material
+
+      - name: 📦 Install mkDocs Plug-ins
+        run: |
+          pip install mkdocs-video
+          pip install "mkdocs-material[imaging]"
+
+      - name: 💅 Build the docs site
+        run: mkdocs build --config-file .mkdocs.yml
+
+      - name: 🚀 Deploy to GitHub Pages
+        run: mkdocs gh-deploy --config-file .mkdocs.yml --force
