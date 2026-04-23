@@ -18,7 +18,7 @@ theme:
   name: material
   favicon: img/favicon.png
   icon:
-    logo: material/lightbulb-on-outline
+    logo: material/robot-angry-outline
   features:
     - content.code.annotate
     - content.code.copy
@@ -110,6 +110,9 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/andrewjswan
+
+extra_css:
+  - stylesheets/github.css
 
 extra_javascript:
   - https://cdnjs.cloudflare.com
