@@ -100,6 +100,52 @@ jobs:
               yaml.dump(config, f, sort_keys=False, allow_unicode=True)
         shell: python
 
+      - name: 🗂️ Generate Repositories Page
+        run: |
+          import requests
+          import os
+
+          username = "andrewjswan"
+          output_path = "docs/repos.md"
+          exclude_repos = ["andrewjswan", "andrewjswan.github.io"] 
+
+          url = f"https://api.github.com/users/{username}/repos?per_page=100"
+          response = requests.get(url)
+
+          if response.status_code == 200:
+              all_repos = response.json()
+              filtered = [r for r in all_repos if not r['fork'] and r['name'] not in exclude_repos]
+              filtered.sort(key=lambda x: (x['stargazers_count'], x['updated_at']), reverse=True)
+
+              top_repos = [r['name'] for r in filtered[:6]]
+              other_repos = [r['name'] for r in filtered[6:30]]
+          else:
+              top_repos, other_repos = ["svitlobot"], ["matrix-lamp", "pixel-clock"]
+
+          with open(output_path, "w", encoding="utf-8") as f:
+              f.write("# Projects\n\n")
+
+              if top_repos:
+                  f.write("## ⭐ Top Projects\n\n")
+                  f.write('<div align="center" markdown="1">\n\n')
+                  for repo in top_repos:
+                      url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}"
+                      f.write(f"[![{repo}]({url}#only-light)](https://github.com/{username}/{repo})\n")
+                      url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true"
+                      f.write(f"[![{repo}]({url}#only-dark)](https://github.com/{username}/{repo})\n")
+                  f.write('\n</div>\n\n')
+
+              if other_repos:
+                  f.write("## 📂 Other Projects\n\n")
+                  f.write('<div align="center" markdown="1">\n\n')
+                  for repo in other_repos:
+                      url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}"
+                      f.write(f"[![{repo}]({url}#only-light)](https://github.com/{username}/{repo})\n")
+                      url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true"
+                      f.write(f"[![{repo}]({url}#only-dark)](https://github.com/{username}/{repo})\n")
+                  f.write('\n</div>\n')
+        shell: python
+
       - name: 💅 Build the docs site
         run: mkdocs build --config-file .mkdocs.yml
 
