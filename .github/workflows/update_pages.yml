@@ -149,7 +149,7 @@ jobs:
                   f.write('\n</div>\n')
 
                   f.write("## ♾️ All Repositories\n\n")
-                  f.write("!!! danger "All Repositories"\n\n")
+                  f.write('!!! danger "All Repositories"\n\n')
                   f.write(f'    More projects and contributions are available on my [GitHub profile](https://github.com/{username}?tab=repositories).\n')
         shell: python
 
