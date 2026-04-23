@@ -144,6 +144,9 @@ jobs:
                       url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true"
                       f.write(f"[![{repo}]({url}#only-dark)](https://github.com/{username}/{repo})\n")
                   f.write('\n</div>\n')
+
+                  f.write("## ♾️ All Repositories\n\n")
+                  f.write(f'More projects and contributions are available on my [GitHub profile](https://github.com/{username}?tab=repositories).\n')
         shell: python
 
       - name: 💅 Build the docs site
