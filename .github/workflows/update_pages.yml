@@ -55,6 +55,7 @@ jobs:
           fi
 
           sed -i 's|<a href="my-badges/|<a href="badges/|g' badges/README.md
+          sed -i 's|.md"><img|"><img|g' badges/README.md
 
           echo -e "\n### Achievements\n" >> docs/index.md
           awk '/<!-- my-badges start -->/{flag=1; next} /<!-- my-badges end -->/{flag=0} flag' badges/README.md >> docs/index.md
