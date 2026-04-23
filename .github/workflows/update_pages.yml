@@ -111,6 +111,39 @@ jobs:
           username = "andrewjswan"
           output_path = "docs/repos.md"
           exclude_repos = ["andrewjswan", "andrewjswan.github.io"] 
+          token = os.getenv("GITHUB_TOKEN")
+          headers = {"Authorization": f"token {token}"} if token else {}
+
+          langs_config = {
+              "ESPHome": {"color": "44739E", "logo": "esphome"},
+              "Python": {"color": "3776AB", "logo": "python"},
+              "JavaScript": {"color": "F7DF1E", "logo": "javascript"},
+              "TypeScript": {"color": "3178C6", "logo": "typescript"},
+              "C#": {"color": "239120", "logo": "csharp"},
+              "C++": {"color": "00599C", "logo": "cplusplus"},
+              "C": {"color": "A8B9CC", "logo": "c"},
+              "HTML": {"color": "E34F26", "logo": "html5"},
+              "CSS": {"color": "1572B6", "logo": "css3"},
+              "Shell": {"color": "4EAA25", "logo": "gnubash"}
+          }
+
+          tools_config = {
+              "Home Assistant": {"color": "41BDF5", "logo": "homeassistant"},
+              "React": {"color": "61DAFB", "logo": "react"},
+              "Docker": {"color": "2496ED", "logo": "docker"},
+              "Dockerfile": {"color": "2496ED", "logo": "docker"},
+              "Jinja": {"color": "B41717", "logo": "jinja"},
+              "Batchfile": {"color": "4EAA25", "logo": "gnubash"},
+              "MySQL": {"color": "4479A1", "logo": "mysql"},
+              "PostgreSQL": {"color": "4169E1", "logo": "postgresql"},
+              "Git": {"color": "F05032", "logo": "git"},
+              "Linux": {"color": "FCC624", "logo": "linux"},
+              "Node.js": {"color": "339933", "logo": "node.js"},
+              "Arduino": {"color": "00979D", "logo": "arduino"},
+              "Raspberry Pi": {"color": "C51A4A", "logo": "raspberrypi"},
+              "Markdown": {"color": "000000", "logo": "markdown"},
+              "JSON": {"color": "000000", "logo": "json"}
+          }
 
           url = f"https://api.github.com/users/{username}/repos?per_page=100"
           response = requests.get(url)
@@ -118,35 +151,65 @@ jobs:
           if response.status_code == 200:
               all_repos = response.json()
               filtered = [r for r in all_repos if not r['fork'] and r['name'] not in exclude_repos]
-              filtered.sort(key=lambda x: (x['stargazers_count'], x['updated_at']), reverse=True)
+              
+              found_langs = set()
+              found_tools = set()
 
-              top_repos = [r['name'] for r in filtered[:6]]
-              other_repos = [r['name'] for r in filtered[6:30]]
+              for r in filtered:
+                  lang = r.get('language')
+                  if lang in langs_config: found_langs.add(lang)
+                  elif lang in tools_config: found_tools.add(lang)
+                  
+                  lang_data = requests.get(r['languages_url'], headers=headers).json()
+                  for l in lang_data.keys():
+                      if l in langs_config: found_langs.add(l)
+                      elif l in tools_config: found_tools.add(l)
+
+                  for t in r.get('topics', []):
+                      for name in langs_config:
+                          if t.lower() == name.lower().replace(".", "").replace(" ", ""): found_langs.add(name)
+                      for name in tools_config:
+                          if t.lower() == name.lower().replace(".", "").replace(" ", ""): found_tools.add(name)
           else:
-              top_repos, other_repos = ["svitlobot"], ["matrix-lamp", "pixel-clock"]
+              filtered, found_langs, found_tools = [], set(), set()
+
+          found_langs.add("ESPHome")
+          found_tools.add("Home Assistant")
+
+          all_badges = []
+          for tech_list, config in [(sorted(found_langs), langs_config), (sorted(found_tools), tools_config)]:
+              for name in tech_list:
+                  safe_name = name.replace(' ', '%20').replace('#', '%23').replace('+', '%2B')
+                  all_badges.append(f"![](https://img.shields.io/badge/{safe_name}-{config[name]['color']}?logo={config[name]['logo']}&logoColor=white&style=flat-square)")
 
           with open(output_path, "w", encoding="utf-8") as f:
               f.write("# Projects\n\n")
+              
+              if all_badges:
+                  f.write("### 🛠 Languages & Technologies\n")
+                  f.write(" ".join(all_badges) + "\n\n")
+
+              filtered.sort(key=lambda x: (x['stargazers_count'], x['updated_at']), reverse=True)
+              top_repos = [r['name'] for r in filtered[:6]]
+              other_repos = [r['name'] for r in filtered[6:30]]
 
               if top_repos:
-                  f.write("## ⭐ Top Projects\n\n")
-                  f.write('<div markdown="1">\n\n')
+                  f.write("## ⭐ Top Projects\n\n<div markdown=\"1\">\n\n")
                   for repo in top_repos:
                       url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}"
                       f.write(f"[![{repo}]({url}#only-light)](https://github.com/{username}/{repo})\n")
                       url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true"
                       f.write(f"[![{repo}]({url}#only-dark)](https://github.com/{username}/{repo})\n")
-                  f.write('\n</div>\n\n')
+                  f.write("\n</div>\n\n")
 
               if other_repos:
-                  f.write("## 📂 Other Projects\n\n")
-                  f.write('<div markdown="1">\n\n')
+                  f.write("## 📂 Other Projects\n\n<div markdown=\"1\">\n\n")
                   for repo in other_repos:
                       url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}"
                       f.write(f"[![{repo}]({url}#only-light)](https://github.com/{username}/{repo})\n")
                       url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true"
                       f.write(f"[![{repo}]({url}#only-dark)](https://github.com/{username}/{repo})\n")
-                  f.write('\n</div>\n')
+                  f.write("\n</div>\n")
 
                   f.write("## ♾️ All Repositories\n\n")
                   f.write('!!! danger "All Repositories"\n\n')
