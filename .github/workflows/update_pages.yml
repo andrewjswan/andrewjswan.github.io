@@ -18,6 +18,13 @@ jobs:
       - name: ⬇️ Check out Repo
         uses: actions/checkout@v6
 
+      - name: ⬇️ Checkout Badges
+        uses: actions/checkout@v6
+        with:
+          repository: andrewjswan/andrewjswan
+          ref: master
+          path: badges
+
       - name: 🎭 Setup Pages
         id: pages
         uses: actions/configure-pages@v6
@@ -27,6 +34,10 @@ jobs:
         with:
           python-version: 3.x
 
+      - name: 📦 Install dependencies
+        run: |
+          pip install PyYAML
+
       - name: 📦 Install mkDocs
         run: pip install mkdocs-material
 
@@ -34,6 +45,50 @@ jobs:
         run: |
           pip install mkdocs-video
           pip install "mkdocs-material[imaging]"
+
+      - name: 🏅 Prepare Badges and Docs
+        run: |
+          mkdir -p docs/badges
+          
+          if [ -d "badges/my-badges/" ]; then
+            cp badges/my-badges/*.md docs/badges/
+          fi
+
+          sed -i 's|<a href="my-badges/|<a href="badges/|g' badges/README.md
+
+          echo -e "\n### Achievements\n" >> docs/index.md
+          awk '/<!-- my-badges start -->/{flag=1; next} /<!-- my-badges end -->/{flag=0} flag' badges/README.md >> docs/index.md
+
+      - name: 🗺️ Update MkDocs Nav
+        run: |
+          import yaml
+          import os
+
+          config_path = '.mkdocs.yml'
+          badges_dir = 'docs/badges'
+          
+          if os.path.exists(badges_dir):
+              files = sorted([f'badges/{f}' for f in os.listdir(badges_dir) if f.endswith('.md')])
+          else:
+              files = []
+
+          with open(config_path, 'r', encoding='utf-8') as f:
+              config = yaml.safe_load(f)
+
+          found = False
+          if 'nav' in config:
+              for item in config['nav']:
+                  if isinstance(item, dict) and 'Badges' in item:
+                      item['Badges'] = files
+                      found = True
+                      break
+          
+          if not found:
+              print("Warning: Section 'Badges: []' not found in nav!")
+
+          with open(config_path, 'w', encoding='utf-8') as f:
+              yaml.dump(config, f, sort_keys=False, allow_unicode=True)
+        shell: python
 
       - name: 💅 Build the docs site
         run: mkdocs build --config-file .mkdocs.yml
