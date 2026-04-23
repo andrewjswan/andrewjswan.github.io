@@ -54,6 +54,9 @@ jobs:
             cp badges/my-badges/*.md docs/badges/
           fi
 
+          find docs/badges/ -name "*.md" -exec sed -i -E 's|<a href="([^"]+)">#[0-9]+</a>:? (.*)|\2 (\1)|g' {} +
+          find docs/badges/ -name "*.md" -exec sed -i -E 's|<a href="([^"]+)">([^<#][^<]+)</a>|\2 (\1)|g' {} +
+
           sed -i 's|<a href="my-badges/|<a href="badges/|g' badges/README.md
           sed -i 's|.md"><img|"><img|g' badges/README.md
 
