@@ -100,7 +100,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Badges: []
-  - Repository: repos.md
+  - Repositories: repos.md
 
 extra:
   analytics:
