@@ -3,8 +3,6 @@ title: GitHub | Andrew J.Swan
 description: Andrew J.Swan | GitHub profile
 ---
 
-## Andrew J.Swan
-
 <div align="center" markdown="1">
 
 [![Stats](https://github-stats-alpha.vercel.app/api?username=andrewjswan&bc=ff&ic=000000#only-light)](https://github.com/andrewjswan)
