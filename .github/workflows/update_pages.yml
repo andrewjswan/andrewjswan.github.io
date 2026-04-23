@@ -61,6 +61,8 @@ jobs:
           find docs/badges/ -name "*.md" -exec sed -i 's/<img src="/<img align="left" style="margin-right: 15px;" src="/g' {} +
           find docs/badges/ -name "*.md" -exec sed -i 's|</strong>|</strong><div style="clear: both;"></div>|g' {} +
 
+          find docs/badges/ -name "*.md" -exec sed -i 's|<br><br>||g' {} +
+
           sed -i 's|<a href="my-badges/|<a href="badges/|g' badges/README.md
           sed -i 's|.md"><img|"><img|g' badges/README.md
 
