@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
 
 permissions:
   contents: write
@@ -127,7 +130,7 @@ jobs:
 
               if top_repos:
                   f.write("## ⭐ Top Projects\n\n")
-                  f.write('<div align="center" markdown="1">\n\n')
+                  f.write('<div markdown="1">\n\n')
                   for repo in top_repos:
                       url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}"
                       f.write(f"[![{repo}]({url}#only-light)](https://github.com/{username}/{repo})\n")
@@ -137,7 +140,7 @@ jobs:
 
               if other_repos:
                   f.write("## 📂 Other Projects\n\n")
-                  f.write('<div align="center" markdown="1">\n\n')
+                  f.write('<div markdown="1">\n\n')
                   for repo in other_repos:
                       url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}"
                       f.write(f"[![{repo}]({url}#only-light)](https://github.com/{username}/{repo})\n")
@@ -146,7 +149,8 @@ jobs:
                   f.write('\n</div>\n')
 
                   f.write("## ♾️ All Repositories\n\n")
-                  f.write(f'More projects and contributions are available on my [GitHub profile](https://github.com/{username}?tab=repositories).\n')
+                  f.write("!!! danger "All Repositories"\n\n")
+                  f.write(f'    More projects and contributions are available on my [GitHub profile](https://github.com/{username}?tab=repositories).\n')
         shell: python
 
       - name: 💅 Build the docs site
