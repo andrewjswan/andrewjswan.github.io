@@ -115,6 +115,13 @@ jobs:
           token = os.getenv("GITHUB_TOKEN")
           headers = {"Authorization": f"token {token}"} if token else {}
 
+          def get_icon_color(hex_color):
+              hex_color = hex_color.lstrip('#')
+              if len(hex_color) != 6: return "white"
+              r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+              brightness = (r * 299 + g * 587 + b * 114) / 1000
+              return "black" if brightness > 155 else "white"
+
           langs_config = {
               "Python": {"color": "3776AB", "logo": "python"},
               "JavaScript": {"color": "F7DF1E", "logo": "javascript"},
@@ -227,8 +234,9 @@ jobs:
           all_badges = []
           for tech_list, config in [(sorted(found_langs), langs_config), (sorted(found_tools), tools_config)]:
               for name in tech_list:
+                  i_color = get_icon_color(config[name]['color'])
                   safe_name = name.replace(' ', '%20').replace('#', '%23').replace('+', '%2B')
-                  all_badges.append(f"![](https://img.shields.io/badge/{safe_name}-{config[name]['color']}?logo={config[name]['logo']}&logoColor=black&style=flat-square)")
+                  all_badges.append(f"![](https://img.shields.io/badge/{safe_name}-{config[name]['color']}?logo={config[name]['logo']}&logoColor={i_color}&style=for-the-badge)")
 
           with open(output_path, "w", encoding="utf-8") as f:
               f.write("# Projects\n\n")
