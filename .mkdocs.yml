@@ -99,8 +99,22 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Repositories:
+      - repos.md
+      - Matrix Lamp: https://andrewjswan.github.io/matrix-lamp/
+      - Pixel Clock: https://andrewjswan.github.io/pixel-clock/
+      - SvitloBot: https://andrewjswan.github.io/svitlobot/
+      - ESPHome:
+          - esphome.md
+          - Components: https://andrewjswan.github.io/esphome-components
+          - Configs: https://andrewjswan.github.io/esphome-config
+      - Home Assistant Apps: https://github.com/andrewjswan/home-assistant-addons
+      - MediaPortal:
+          - mediaportal.md
+          - MediaPortal: https://github.com/MediaPortal/MediaPortal-1
+          - Plugins: https://github.com/Mediaportal-Plugin-Team
+          - MPExtended: https://github.com/MPExtended
   - Badges: []
-  - Repositories: repos.md
 
 extra:
   analytics:
