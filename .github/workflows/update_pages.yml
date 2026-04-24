@@ -128,7 +128,7 @@ jobs:
               "TypeScript": {"color": "3178C6", "logo": "typescript"},
               "Java": {"color": "ED8B00", "logo": "openjdk"},
               "C++": {"color": "00599C", "logo": "cplusplus"},
-              "C": {"color": "A8B9CC", "logo": "c"},
+              "C": {"color": "A8B9CC", "logo": "c", "logoColor": "white"},
               "C#": {"color": "239120", "logo": "c"},
               "Delphi": {"color": "F11E11", "logo": "delphi"},
               "Object Pascal": {"color": "F11E11", "logo": "delphi"},
@@ -161,14 +161,14 @@ jobs:
               "Node.js": {"color": "339933", "logo": "node.js"},
               "Jupyter Notebook": {"color": "F37626", "logo": "jupyter"},
               "Jupyter": {"color": "F37626", "logo": "jupyter"},
-              "Home Assistant": {"color": "41BDF5", "logo": "homeassistant"},
+              "Home Assistant": {"color": "41BDF5", "logo": "homeassistant", "logoColor": "white"},
               "Docker": {"color": "2496ED", "logo": "docker"},
               "Dockerfile": {"color": "2496ED", "logo": "docker"},
               "HCL": {"color": "7B42BC", "logo": "terraform"},
               "Nix": {"color": "5277C3", "logo": "nixos"},
               "PowerShell": {"color": "5391FE", "logo": "powershell"},
               "Git": {"color": "F05032", "logo": "git"},
-              "MySQL": {"color": "4479A1", "logo": "mysql"},
+              "MySQL": {"color": "4479A1", "logo": "mysql", "logoColor": "black"},
               "PostgreSQL": {"color": "4169E1", "logo": "postgresql"},
               "Linux": {"color": "FCC624", "logo": "linux"},
               "Jinja": {"color": "B41717", "logo": "jinja"},
@@ -234,7 +234,7 @@ jobs:
           all_badges = []
           for tech_list, config in [(sorted(found_langs), langs_config), (sorted(found_tools), tools_config)]:
               for name in tech_list:
-                  i_color = get_icon_color(config[name]['color'])
+                  i_color = config[name].get('logoColor', get_icon_color(config[name]['color']))
                   safe_name = name.replace(' ', '%20').replace('#', '%23').replace('+', '%2B')
                   all_badges.append(f"![](https://img.shields.io/badge/{safe_name}-{config[name]['color']}?logo={config[name]['logo']}&logoColor={i_color}&style=for-the-badge)")
 
