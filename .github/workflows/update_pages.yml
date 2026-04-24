@@ -74,8 +74,8 @@ jobs:
 
       - name: 🗺️ Update MkDocs Nav
         run: |
-          import yaml
           import os
+          import yaml
 
           config_path = '.mkdocs.yml'
           badges_dir = 'docs/badges'
@@ -105,8 +105,9 @@ jobs:
 
       - name: 🗂️ Generate Repositories Page
         run: |
-          import requests
           import os
+          import re
+          import requests
 
           username = "andrewjswan"
           output_path = "docs/repos.md"
