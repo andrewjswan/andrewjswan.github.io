@@ -227,7 +227,7 @@ jobs:
           for tech_list, config in [(sorted(found_langs), langs_config), (sorted(found_tools), tools_config)]:
               for name in tech_list:
                   safe_name = name.replace(' ', '%20').replace('#', '%23').replace('+', '%2B')
-                  all_badges.append(f"![](https://img.shields.io/badge/{safe_name}-{config[name]['color']}?logo={config[name]['logo']}&logoColor=white&style=flat-square)")
+                  all_badges.append(f"![](https://img.shields.io/badge/{safe_name}-{config[name]['color']}?logo={config[name]['logo']}&logoColor=black&style=flat-square)")
 
           with open(output_path, "w", encoding="utf-8") as f:
               f.write("# Projects\n\n")
