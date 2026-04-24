@@ -182,8 +182,8 @@ jobs:
           url = f"https://api.github.com/users/{username}/repos?per_page=100"
           response = requests.get(url)
 
-          if repos_resp.status_code == 200:
-              all_repos = repos_resp.json()
+          if response.status_code == 200:
+              all_repos = response.json()
               filtered = [r for r in all_repos if not r['fork'] and r['name'] not in exclude_repos]
               
               found_langs = set()
