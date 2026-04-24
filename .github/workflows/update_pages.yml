@@ -121,7 +121,9 @@ jobs:
               "Java": {"color": "ED8B00", "logo": "openjdk"},
               "C++": {"color": "00599C", "logo": "cplusplus"},
               "C": {"color": "A8B9CC", "logo": "c"},
-              "C#": {"color": "239120", "logo": "csharp"},
+              "C#": {"color": "239120", "logo": "c"},
+              "Delphi": {"color": "F11E11", "logo": "delphi"},
+              "Object Pascal": {"color": "F11E11", "logo": "delphi"},
               "Go": {"color": "00ADD8", "logo": "go"},
               "Rust": {"color": "000000", "logo": "rust"},
               "Ruby": {"color": "CC342D", "logo": "ruby"},
@@ -143,7 +145,7 @@ jobs:
 
           tools_config = {
               "HTML": {"color": "E34F26", "logo": "html5"},
-              "CSS": {"color": "1572B6", "logo": "css3"},
+              "CSS": {"color": "1572B6", "logo": "css"},
               "SCSS": {"color": "CC6699", "logo": "sass"},
               "Vue": {"color": "4FC08D", "logo": "vuedotjs"},
               "Svelte": {"color": "FF3E00", "logo": "svelte"},
@@ -218,6 +220,7 @@ jobs:
               filtered, found_langs, found_tools = [], set(), set()
 
           found_langs.add("ESPHome")
+          found_langs.add("Delphi")
           found_tools.add("Home Assistant")
 
           all_badges = []
