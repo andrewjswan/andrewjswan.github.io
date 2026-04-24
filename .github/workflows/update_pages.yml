@@ -39,7 +39,7 @@ jobs:
 
       - name: 📦 Install dependencies
         run: |
-          pip install PyYAML
+          pip install beautifulsoup4 PyYAML
 
       - name: 📦 Install mkDocs
         run: pip install mkdocs-material
@@ -101,6 +101,46 @@ jobs:
 
           with open(config_path, 'w', encoding='utf-8') as f:
               yaml.dump(config, f, sort_keys=False, allow_unicode=True)
+        shell: python
+
+      - name: 🗂️ Update GitHub Achievements
+        run: |
+          import requests
+          from bs4 import BeautifulSoup
+          import re
+          import os
+
+          username = "andrewjswan"
+          url = f"https://github.com/{username}?tab=achievements"
+          style= "width:60px; display:inline-block; background:none; border:none; box-shadow:none;"
+          out_path = "docs/index.md"
+
+          response = requests.get(url)
+          soup = BeautifulSoup(response.text, 'html.parser')
+
+          achievements = soup.find_all('img', class_='achievement-badge-card', src=True)
+
+          badge_md = ""
+          for img in achievements:
+              src = img['src']
+              alt = img.get('alt', 'Achievement')
+              badge_md += f'[![{alt}]({src}){{ loading=lazy style="{style}" }}]({url}) '
+
+          if not os.path.exists(out_path):
+              with open(out_path, "w") as f: f.write("<!-- START_SECTION:achievements -->\n<!-- END_SECTION:achievements -->")
+
+          with open(out_path, "r", encoding="utf-8") as f:
+              content = f.read()
+
+          pattern = r"<!-- START_SECTION:achievements -->.*<!-- END_SECTION:achievements -->"
+          replacement = f"<!-- START_SECTION:achievements -->\n{badge_md}\n<!-- END_SECTION:achievements -->"
+
+          if re.search(pattern, content, flags=re.DOTALL):
+              new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+              with open(out_path, "w", encoding="utf-8") as f:
+                  f.write(new_content)
+          else:
+              print("No markers were found!")
         shell: python
 
       - name: 🗂️ Generate Repositories Page
