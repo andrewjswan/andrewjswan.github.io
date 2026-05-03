@@ -72,6 +72,15 @@ jobs:
           echo -e "\n" >> docs/index.md
           awk '/<!-- my-badges start -->/{flag=1; next} /<!-- my-badges end -->/{flag=0} flag' badges/README.md >> docs/index.md
 
+          echo -e "\n" >> docs/index.md
+          echo -e "## Projects\n" >> docs/index.md
+
+          echo -e "\n" >> docs/index.md
+          cat docs/esphome.md >> docs/index.md
+
+          echo -e "\n" >> docs/index.md
+          cat docs/mediaportal.md >> docs/index.md
+
       - name: 🗺️ Update MkDocs Nav
         run: |
           import os

@@ -1,4 +1,5 @@
 ## Welcome to the best media experience with MediaPortal!
+
 [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/MediaPortal/MediaPortal-1?include_prereleases)](https://github.com/MediaPortal/MediaPortal-1/releases)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/downloads-pre/Mediaportal/Mediaportal-1/latest/total?label=release@downloads)](https://github.com/MediaPortal/MediaPortal-1/releases)
 [![MP x86](https://img.shields.io/badge/MP-x86-orange?logo=windows&logoColor=white)](https://github.com/MediaPortal/MediaPortal-1/releases)[![MP x64](https://img.shields.io/badge/x64-blue?logoColor=white)](https://github.com/MediaPortal/MediaPortal-1/releases)
