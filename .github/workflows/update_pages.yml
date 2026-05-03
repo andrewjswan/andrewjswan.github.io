@@ -72,6 +72,20 @@ jobs:
           echo -e "\n" >> docs/index.md
           awk '/<!-- my-badges start -->/{flag=1; next} /<!-- my-badges end -->/{flag=0} flag' badges/README.md >> docs/index.md
 
+          echo -e "\n" >> docs/index.md
+          echo -e "# Projects\n" >> docs/index.md
+
+          echo -e "\n" >> docs/index.md
+          cat docs/esphome.md >> docs/index.md
+
+          echo -e "\n" >> docs/index.md
+          cat docs/mediaportal.md >> docs/index.md
+
+          echo -e "\n" >> docs/index.md
+          echo -e "# All Repositories\n" >> docs/index.md
+          echo -e "!!! danger \"All Repositories\"\n\n" >> docs/index.md
+          echo -e "    More projects and contributions are available on my [GitHub profile](https://github.com/{username}?tab=repositories).\n" >> docs/index.md
+
       - name: 🗺️ Update MkDocs Nav
         run: |
           import os
