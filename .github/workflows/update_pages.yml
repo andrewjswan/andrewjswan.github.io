@@ -65,7 +65,7 @@ jobs:
       - name: 🏅 Prepare Badges and Docs
         run: |
           mkdir -p docs/badges
-          
+
           if [ -d "badges/my-badges/" ]; then
             cp badges/my-badges/*.md docs/badges/
           fi
@@ -106,7 +106,7 @@ jobs:
 
           config_path = '.mkdocs.yml'
           badges_dir = 'docs/badges'
-          
+
           if os.path.exists(badges_dir):
               files = sorted([f'badges/{f}' for f in os.listdir(badges_dir) if f.endswith('.md')])
           else:
@@ -122,7 +122,7 @@ jobs:
                       item['Badges'] = files
                       found = True
                       break
-          
+
           if not found:
               print("Warning: Section 'Badges: []' not found in nav!")
 
@@ -178,7 +178,7 @@ jobs:
 
           username = "andrewjswan"
           output_path = "docs/repos.md"
-          exclude_repos = ["andrewjswan", "andrewjswan.github.io"] 
+          exclude_repos = ["andrewjswan", "andrewjswan.github.io"]
           token = os.getenv("GITHUB_TOKEN")
           headers = {"Authorization": f"token {token}"} if token else {}
 
@@ -249,7 +249,7 @@ jobs:
           TOOL_PATTERNS = [
               (r'react', "React"), (r'vue', "Vue"), (r'svelte', "Svelte"),
               (r'node', "Node.js"), (r'docker', "Docker"), (r'nix', "Nix"),
-              (r'terraform|hcl', "HCL"), (r'postgres', "PostgreSQL"), 
+              (r'terraform|hcl', "HCL"), (r'postgres', "PostgreSQL"),
               (r'mysql', "MySQL"), (r'git(?!hub)', "Git"), (r'linux', "Linux"),
               (r'home assistant|homeassistant', "Home Assistant"), (r'jinja', "Jinja")
           ]
@@ -260,7 +260,7 @@ jobs:
           if response.status_code == 200:
               all_repos = response.json()
               filtered = [r for r in all_repos if not r['fork'] and r['name'] not in exclude_repos]
-              
+
               found_langs = set()
               found_tools = set()
               full_text = ""
@@ -273,7 +273,7 @@ jobs:
                   lang = r.get('language')
                   if lang in langs_config: found_langs.add(lang)
                   elif lang in tools_config: found_tools.add(lang)
-                  
+
                   try:
                       lang_data = requests.get(r['languages_url'], headers=headers).json()
                       for l in lang_data.keys():
@@ -307,7 +307,7 @@ jobs:
 
           with open(output_path, "w", encoding="utf-8") as f:
               f.write("# Projects\n\n")
-              
+
               if all_badges:
                   f.write("### 🛠 Languages & Technologies\n")
                   f.write(" ".join(all_badges) + "\n\n")
