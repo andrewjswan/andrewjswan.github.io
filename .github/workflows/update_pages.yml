@@ -1,4 +1,4 @@
-name: Build and Update Pages
+name: 🏗️ Build and Update Pages
 
 on:
   push:
@@ -14,8 +14,15 @@ permissions:
   id-token: write
 
 jobs:
+  generate-assets:
+    name: 🎨 Generate Assets
+    uses: ./.github/workflows/generate_assets.yaml
+    secrets: inherit
+
   build:
-    name: Build Pages
+    name: 🌐 Build Pages
+    needs:
+      - generate-assets
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Check out Repo
@@ -27,6 +34,12 @@ jobs:
           repository: andrewjswan/andrewjswan
           ref: master
           path: badges
+
+      - name: ⬇️ Checkout Assets
+        uses: actions/checkout@v6
+        with:
+          ref: assets
+          path: docs/img/repos
 
       - name: 🎭 Setup Pages
         id: pages
@@ -306,24 +319,24 @@ jobs:
               if top_repos:
                   f.write("## ⭐ Top Projects\n\n<div markdown=\"1\">\n\n")
                   for repo in top_repos:
-                      url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}"
-                      f.write(f"[![{repo}]({url}#only-light)](https://github.com/{username}/{repo})\n")
-                      url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true"
-                      f.write(f"[![{repo}]({url}#only-dark)](https://github.com/{username}/{repo})\n")
+                      light_path = f"img/repos/light/{repo}.svg"
+                      dark_path = f"img/repos/dark/{repo}.svg"
+                      f.write(f"[![{repo}]({light_path}#only-light)](https://github.com/{username}/{repo})\n")
+                      f.write(f"[![{repo}]({dark_path}#only-dark)](https://github.com/{username}/{repo})\n")
                   f.write("\n</div>\n\n")
 
               if other_repos:
                   f.write("## 📂 Other Projects\n\n<div markdown=\"1\">\n\n")
                   for repo in other_repos:
-                      url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}"
-                      f.write(f"[![{repo}]({url}#only-light)](https://github.com/{username}/{repo})\n")
-                      url = f"https://github-readme-stats.vercel.app/api/pin/?username={username}&repo={repo}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true"
-                      f.write(f"[![{repo}]({url}#only-dark)](https://github.com/{username}/{repo})\n")
+                      light_path = f"img/repos/light/{repo}.svg"
+                      dark_path = f"img/repos/dark/{repo}.svg"
+                      f.write(f"[![{repo}]({light_path}#only-light)](https://github.com/{username}/{repo})\n")
+                      f.write(f"[![{repo}]({dark_path}#only-dark)](https://github.com/{username}/{repo})\n")
                   f.write("\n</div>\n")
 
-                  f.write("## ♾️ All Repositories\n\n")
-                  f.write('!!! danger "All Repositories"\n\n')
-                  f.write(f'    More projects and contributions are available on my [GitHub profile](https://github.com/{username}?tab=repositories).\n')
+              f.write("## ♾️ All Repositories\n\n")
+              f.write('!!! danger "All Repositories"\n\n')
+              f.write(f'    More projects and contributions are available on my [GitHub profile](https://github.com/{username}?tab=repositories).\n')
         shell: python
 
       - name: 💅 Build the docs site
