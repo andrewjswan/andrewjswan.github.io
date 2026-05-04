@@ -34,16 +34,12 @@ jobs:
       - name: 📥 Checkout
         uses: actions/checkout@v6
 
-      - name: 🧹 Clean workspace
-        run: |
-          find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
-
       - name: ☀️ Generate lightcard for ${{ matrix.repo }}
         uses: readme-tools/github-readme-stats-action@v1
         with:
           card: pin
           options: username=${{ github.repository_owner }}&repo=${{ matrix.repo }}
-          path: light/${{ matrix.repo }}.svg
+          path: output/light/${{ matrix.repo }}.svg
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🌙 Generate darkcard for ${{ matrix.repo }}
@@ -51,13 +47,13 @@ jobs:
         with:
           card: pin
           options: username=${{ github.repository_owner }}&repo=${{ matrix.repo }}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true
-          path: dark/${{ matrix.repo }}.svg
+          path: output/dark/${{ matrix.repo }}.svg
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🚀 Deploy to Assets Branch
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: .
+          folder: output
           branch: assets
           target-folder: .
           clean: false
