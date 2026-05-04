@@ -31,6 +31,9 @@ jobs:
         repo: ${{ fromJson(needs.get-repo-list.outputs.repo_list) }}
       max-parallel: 1
     steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v6
+
       - name: ☀️ Generate lightcard for ${{ matrix.repo }}
         uses: readme-tools/github-readme-stats-action@v1
         with:
