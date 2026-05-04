@@ -16,7 +16,7 @@ permissions:
 jobs:
   generate-assets:
     name: 🎨 Generate Assets
-    uses: ./.github/workflows/generate_assets.yaml
+    uses: ./.github/workflows/generate_assets.yml
     secrets: inherit
 
   build:
