@@ -1,0 +1,57 @@
+name: 🎨 Generate Assets
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  get-repo-list:
+    name: 🔍 Get list of repository
+    runs-on: ubuntu-latest
+    outputs:
+      repo_list: ${{ steps.set-list.outputs.list }}
+    steps:
+      - id: set-list
+        name: 📡 Fetching all non-fork repositories
+        run: |
+          REPOS=$(curl -s "https://api.github.com/users/${{ github.repository_owner }}/repos?per_page=100" | jq -c '[.[] | select(.fork==false and .name != "${{ github.repository_owner }}" and .name != "${{ github.repository_owner }}.github.io") | .name]')
+          echo "list=$REPOS" >> $GITHUB_OUTPUT
+
+  generate-and-store:
+    name: 🛠️ Generate cards and store it
+    needs:
+      - get-repo-list
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: ${{ fromJson(needs.get-repo-list.outputs.repo_list) }}
+      max-parallel: 1
+    steps:
+      - name: ☀️ Generate lightcard for ${{ matrix.repo }}
+        uses: readme-tools/github-readme-stats-action@v1
+        with:
+          card: pin
+          options: username=${{ github.repository_owner }}&repo=${{ matrix.repo }}
+          path: light/${{ matrix.repo }}.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🌙 Generate darkcard for ${{ matrix.repo }}
+        uses: readme-tools/github-readme-stats-action@v1
+        with:
+          card: pin
+          options: username=${{ github.repository_owner }}&repo=${{ matrix.repo }}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true
+          path: dark/${{ matrix.repo }}.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🚀 Deploy to Assets Branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          branch: assets
+          target-folder: .
+          clean: false
+          single-commit: false
