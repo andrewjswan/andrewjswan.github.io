@@ -31,7 +31,7 @@ jobs:
       - name: ⬇️ Checkout Badges
         uses: actions/checkout@v6
         with:
-          repository: andrewjswan/andrewjswan
+          repository: ${{ github.repository_owner }}/${{ github.repository_owner }}
           ref: master
           path: badges
 
@@ -137,7 +137,7 @@ jobs:
           import re
           import os
 
-          username = "andrewjswan"
+          username = "${{ github.repository_owner }}"
           url = f"https://github.com/{username}?tab=achievements"
           style= "width:60px; display:inline-block; background:none; border:none; box-shadow:none;"
           out_path = "docs/index.md"
@@ -170,15 +170,68 @@ jobs:
               print("No markers were found!")
         shell: python
 
-      - name: 🗂️ Generate Repositories Page
+      - name: 🏢 Update Organization Badges
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           import os
           import re
           import requests
 
-          username = "andrewjswan"
+          username = "${{ github.repository_owner }}"
+          url = f"https://api.github.com/users/{username}/orgs"
+          style= "for-the-badge"
+          out_path = "docs/index.md"
+
+          def get_color(name):
+              hash_bytes = hashlib.md5((name + "salt_v2").encode()).digest()
+
+              r = hash_bytes[0] % 90
+              g = hash_bytes[1] % 90
+              b = 100 + (hash_bytes[2] % 90)
+
+              return f"{r:02x}{g:02x}{b:02x}"
+
+          badge_md = ""
+          headers = {"Authorization": f"token {os.getenv('GITHUB_TOKEN')}"}
+          response = requests.get(url, headers=headers)
+          if response.status_code == 200:
+              orgs = response.json()
+              for org in orgs:
+                  name = org['login']
+                  color = get_color(name)
+                  logo = 'github'
+                  safe_name = name.replace('-', '--').replace('_', '__').replace(' ', '_')
+                  badge_md += f"[![{name}](https://img.shields.io/badge/{safe_name}-{color}?style={style}&logo={logo})](https://github.com/{name})"
+
+          if not os.path.exists(out_path):
+              with open(out_path, "w") as f: f.write("<!-- START_SECTION:organization -->\n<!-- END_SECTION:organization -->")
+
+          with open(out_path, "r", encoding="utf-8") as f:
+              content = f.read()
+
+          pattern = r"<!-- START_SECTION:organization -->.*<!-- END_SECTION:organization -->"
+          replacement = f"<!-- START_SECTION:organization -->\n{badge_md}\n<!-- END_SECTION:organization -->"
+
+          if re.search(pattern, content, flags=re.DOTALL):
+              new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+              with open(out_path, "w", encoding="utf-8") as f:
+                  f.write(new_content)
+          else:
+              print("No markers were found!")
+        shell: python
+
+      - name: 🗂️ Generate Repositories Page
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          import os
+          import re
+          import requests
+
+          username = "${{ github.repository_owner }}"
           output_path = "docs/repos.md"
-          exclude_repos = ["andrewjswan", "andrewjswan.github.io"]
+          exclude_repos = ["${{ github.repository_owner }}", "${{ github.repository_owner }}.github.io"]
           include_repos = ["snmp2mqtt", "EspHoMaTriXv2", "CECRemote", "esphome-ping", "home-assistant-dewpoint", "mvcentral", "mediaportal-tunein"]
           token = os.getenv("GITHUB_TOKEN")
           headers = {"Authorization": f"token {token}"} if token else {}
