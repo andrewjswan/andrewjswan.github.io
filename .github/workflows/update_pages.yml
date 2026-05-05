@@ -248,6 +248,25 @@ jobs:
               with open(blog_index, "w", encoding="utf-8") as f:
                   f.write("## Blog\n\n")
 
+          def convert_github_alerts(text):
+              mapping = {
+                  "NOTE": "note",
+                  "TIP": "tip",
+                  "IMPORTANT": "abstract",  # info
+                  "WARNING": "warning",
+                  "CAUTION": "danger"       # caution
+              }
+          
+              def replace_match(match):
+                  alert_type = match.group(1).upper()
+                  mkdocs_type = mapping.get(alert_type, "note")
+                  return f"!!! {mkdocs_type}"
+          
+              return re.sub(r'^>\s+\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]', 
+                            replace_match, 
+                            text, 
+                            flags=re.M | re.I)
+          
           headers = {
               "Authorization": f"token {os.getenv('GITHUB_TOKEN')}",
               "Accept": "application/vnd.github+json"
@@ -272,6 +291,7 @@ jobs:
                       f.write(f"---\ndate: {date}\ntitle: \"{title}\"\n---\n\n")
                       
                       if file_data.get('language') == 'Markdown':
+                          content = convert_github_alerts(content)
                           f.write(content)
                           f.write('\n')
                       else:
