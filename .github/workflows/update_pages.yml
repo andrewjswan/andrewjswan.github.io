@@ -264,22 +264,22 @@ jobs:
                   date = gist['created_at'][:10]
 
                   file_path = os.path.join(folder, f"gist-{gist['id']}.md")
-                  with open(file_path, 'w', encoding='utf-8', newline='\n') as f:
+                  with open(file_path, 'w', encoding='utf-8') as f:
                       f.write(f"---\ndate: {date}\ntitle: \"{title}\"\n---\n\n")
-
+                      
                       if file_data.get('language') == 'Markdown':
-                          content.replace('\n|', '\n\n|')
-                          f.write(content.strip())
+                          fixed_content = content.replace('\n|', '\n\n|')
+                          f.write(fixed_content)
                           f.write('\n')
                       else:
                           lang = (file_data.get('language') or "text").lower()
                           if lang == "python": lang = "py"
-
+                          
                           f.write(f'!!! example annotate "{title}"\n\n')
                           f.write(f'    ``` {{ .{lang} .copy }}\n')
-                          indented_content = "\n".join([f"    {line}" for line in content.splitlines()])
-                          f.write(indented_content)
-                          f.write('\n    ```\n\n')
+                          for line in content.splitlines():
+                              f.write(f'    {line}\n')
+                          f.write('    ```\n\n')
               print(f"Sync complete. Processed {len(gists)} items.")
           else:
               print(f"FAILED: API returned {response.status_code}: {response.text}")
