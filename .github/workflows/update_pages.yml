@@ -209,7 +209,7 @@ jobs:
                   color = get_color(name)
                   logo = 'github'
                   safe_name = name.replace('-', '--').replace('_', '__').replace(' ', '_')
-                  badge_md += f"[![{name}](https://img.shields.io/badge/{safe_name}-{color}?style={style}&logo={logo})](https://github.com/{name})"
+                  badge_md += f"[![{name}](https://img.shields.io/badge/{safe_name}-{color}?style={style}&logo={logo})](https://github.com/{name}) "
 
           if not os.path.exists(out_path):
               with open(out_path, "w") as f: f.write("<!-- START_SECTION:organization -->\n<!-- END_SECTION:organization -->")
