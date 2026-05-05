@@ -277,6 +277,8 @@ jobs:
                           f.write('    ```\n\n')
                           f.write(f'[View original at GitHub]({gist["html_url"]}){{ .md-button }}')
               print(f"Sync complete. Processed {len(gists)} items.")
+          else:
+              print(f"FAILED: API returned {response.status_code}: {response.text}")
         shell: python
 
       - name: 🗂️ Generate Repositories Page
