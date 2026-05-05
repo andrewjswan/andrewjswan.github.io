@@ -174,7 +174,7 @@ jobs:
 
       - name: 🏢 Update Organization Badges
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PROFILE }}
         run: |
           import hashlib
           import os
@@ -182,8 +182,8 @@ jobs:
           import requests
 
           username = "${{ github.repository_owner }}"
-          # url = f"https://api.github.com/users/{username}/orgs"
-          url = f"https://api.github.com/user/orgs"
+          url = f"https://api.github.com/users/{username}/orgs"
+          # url = f"https://api.github.com/user/orgs"
           style= "for-the-badge"
           out_path = "docs/index.md"
 
