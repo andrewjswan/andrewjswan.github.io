@@ -228,6 +228,57 @@ jobs:
               print("No markers were found!")
         shell: python
 
+      - name: 🐙 Sync Gists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          import os
+          import requests
+
+          username = "${{ github.repository_owner }}"
+          url = f"https://api.github.com/users/{username}/gists"
+          folder = "docs/blog/posts/"
+          blog_index = "docs/blog/index.md"
+
+          os.makedirs(folder, exist_ok=True)
+          if not os.path.exists(blog_index):
+              with open(blog_index, "w", encoding="utf-8") as f:
+                  f.write("## Blog\n\nWelcome to my Gist collection.\n")
+
+          headers = {
+              "Authorization": f"token {os.getenv('GITHUB_TOKEN')}",
+              "Accept": "application/json"
+          }
+          response = requests.get(url, headers=headers)
+          if response.status_code == 200:
+              gists = response.json()
+              for gist in gists:
+                  first_file_name = list(gist['files'].keys())[0]
+                  file_data = gist['files'][first_file_name]
+                  content = requests.get(file_data['raw_url']).text
+
+                  raw_title = gist['description'] or first_file_name
+                  title = raw_title.replace('"', '\\"')
+                  date = gist['created_at'][:10]
+
+                  file_path = os.path.join(folder, f"gist-{gist['id']}.md")
+                  with open(file_path, 'w', encoding='utf-8') as f:
+                      f.write(f"---\ndate: {date}\ntitle: \"{title}\"\n---\n\n")
+                      if file_data.get('language') == 'Markdown':
+                          f.write(content)
+                      else:
+                          lang = (file_data.get('language') or "text").lower()
+                          if lang == "python": lang = "py"
+                          
+                          f.write(f'!!! example annotate "{title}"\n\n')
+                          f.write(f'    ``` {{ .{lang} .copy }}\n')
+                          for line in content.splitlines():
+                              f.write(f'    {line}\n')
+                          f.write('    ```\n\n')
+                          f.write(f'[View original at GitHub]({gist["html_url"]}){{ .md-button }}')
+              print(f"Sync complete. Processed {len(gists)} items.")
+        shell: python
+
       - name: 🗂️ Generate Repositories Page
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
