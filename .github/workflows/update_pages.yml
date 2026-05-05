@@ -271,7 +271,7 @@ jobs:
           
               pattern = r'^>\s+\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]((?:\n^>.*)+)'
               return re.sub(pattern, replacement, text, flags=re.M | re.I)
-          
+
           headers = {
               "Authorization": f"token {os.getenv('GITHUB_TOKEN')}",
               "Accept": "application/vnd.github+json"
@@ -297,6 +297,8 @@ jobs:
                       
                       if file_data.get('language') == 'Markdown':
                           content = convert_github_alerts(content)
+                          content = re.sub(r'(!\[.*?\]\(.*?\))', r'\1{ loading=lazy }', content)
+
                           f.write(content)
                           f.write('\n')
                       else:
