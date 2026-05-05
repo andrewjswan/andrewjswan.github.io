@@ -246,7 +246,7 @@ jobs:
           os.makedirs(folder, exist_ok=True)
           if not os.path.exists(blog_index):
               with open(blog_index, "w", encoding="utf-8") as f:
-                  f.write("## Blog\n\nWelcome to my Gist collection.\n")
+                  f.write("## Blog\n\n")
 
           headers = {
               "Authorization": f"token {os.getenv('GITHUB_TOKEN')}",
@@ -259,9 +259,9 @@ jobs:
                   first_file_name = list(gist['files'].keys())[0]
                   file_data = gist['files'][first_file_name]
                   content = requests.get(file_data['raw_url']).text
-                  
+
                   content = content.replace('\r\n', '\n')
-                  content = re.sub(r'([^\n])\n\|', r'\1\n\n|', content)
+                  content = re.sub(r'([^\n|])\n\|', r'\1\n\n|', content)
 
                   raw_title = gist['description'] or first_file_name
                   title = raw_title.replace('"', '\\"')
