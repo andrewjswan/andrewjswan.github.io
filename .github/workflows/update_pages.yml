@@ -181,9 +181,9 @@ jobs:
           import re
           import requests
 
-          username = "${{ github.repository_owner }}"
-          url = f"https://api.github.com/users/{username}/orgs"
-          # url = f"https://api.github.com/user/orgs"
+          # username = "${{ github.repository_owner }}"
+          # url = f"https://api.github.com/users/{username}/orgs"
+          url = f"https://api.github.com/user/orgs"
           style= "for-the-badge"
           out_path = "docs/index.md"
 
@@ -197,7 +197,10 @@ jobs:
               return f"{r:02x}{g:02x}{b:02x}"
 
           badge_md = ""
-          headers = {"Authorization": f"token {os.getenv('GITHUB_TOKEN')}"}
+          headers = {
+              "Authorization": f"token {os.getenv('GITHUB_TOKEN')}",
+              "Accept": "application/vnd.github+json"
+          }
           response = requests.get(url, headers=headers)
           if response.status_code == 200:
               orgs = response.json()
