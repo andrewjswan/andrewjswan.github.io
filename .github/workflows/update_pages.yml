@@ -235,6 +235,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PROFILE }}
         run: |
           import os
+          import re
           import requests
 
           username = "${{ github.repository_owner }}"
@@ -258,18 +259,20 @@ jobs:
                   first_file_name = list(gist['files'].keys())[0]
                   file_data = gist['files'][first_file_name]
                   content = requests.get(file_data['raw_url']).text
+                  
+                  content = content.replace('\r\n', '\n')
+                  content = re.sub(r'([^\n])\n\|', r'\1\n\n|', content)
 
                   raw_title = gist['description'] or first_file_name
                   title = raw_title.replace('"', '\\"')
                   date = gist['created_at'][:10]
 
                   file_path = os.path.join(folder, f"gist-{gist['id']}.md")
-                  with open(file_path, 'w', encoding='utf-8') as f:
+                  with open(file_path, 'w', encoding='utf-8', newline='\n') as f:
                       f.write(f"---\ndate: {date}\ntitle: \"{title}\"\n---\n\n")
                       
                       if file_data.get('language') == 'Markdown':
-                          fixed_content = content.replace('\n|', '\n\n|')
-                          f.write(fixed_content)
+                          f.write(content)
                           f.write('\n')
                       else:
                           lang = (file_data.get('language') or "text").lower()
