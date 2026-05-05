@@ -179,6 +179,7 @@ jobs:
           username = "andrewjswan"
           output_path = "docs/repos.md"
           exclude_repos = ["andrewjswan", "andrewjswan.github.io"]
+          include_repos = ["snmp2mqtt", "EspHoMaTriXv2", "CECRemote", "esphome-ping", "home-assistant-dewpoint", "mvcentral", "mediaportal-tunein"]
           token = os.getenv("GITHUB_TOKEN")
           headers = {"Authorization": f"token {token}"} if token else {}
 
@@ -259,7 +260,11 @@ jobs:
 
           if response.status_code == 200:
               all_repos = response.json()
-              filtered = [r for r in all_repos if not r['fork'] and r['name'] not in exclude_repos]
+              filtered = [
+                  r for r in all_repos 
+                  if (not r['fork'] or r['name'] in include_repos) 
+                  and r['name'] not in exclude_repos
+              ]
 
               found_langs = set()
               found_tools = set()
