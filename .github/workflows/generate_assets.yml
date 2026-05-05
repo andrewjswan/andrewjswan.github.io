@@ -18,7 +18,12 @@ jobs:
       - id: set-list
         name: 📡 Fetching all non-fork repositories
         run: |
-          REPOS=$(curl -s "https://api.github.com/users/${{ github.repository_owner }}/repos?per_page=100" | jq -c '[.[] | select(.fork==false and .name != "${{ github.repository_owner }}" and .name != "${{ github.repository_owner }}.github.io") | .name]')
+          REPOS=$(curl -s "https://api.github.com/users/${{ github.repository_owner }}/repos?per_page=100" | jq -c '[.[] |
+            select(
+              (.fork == false or (.name | IN("snmp2mqtt", "EspHoMaTriXv2", "CECRemote", "esphome-ping", "home-assistant-dewpoint", "mvcentral", "mediaportal-tunein")))
+                and .name != "${{ github.repository_owner }}"
+                and .name != "${{ github.repository_owner }}.github.io"
+              ) | .name]')
           echo "list=$REPOS" >> $GITHUB_OUTPUT
 
   generate-and-store:

@@ -14,4 +14,3 @@ updates:
     commit-message:
       prefix: "DEP"
     open-pull-requests-limit: 10
-  
