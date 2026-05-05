@@ -210,6 +210,8 @@ jobs:
                   logo = 'github'
                   safe_name = name.replace('-', '--').replace('_', '__').replace(' ', '_')
                   badge_md += f"[![{name}](https://img.shields.io/badge/{safe_name}-{color}?style={style}&logo={logo})](https://github.com/{name}) "
+          else:
+              print(f"FAILED: API returned {response.status_code}: {response.text}")
 
           if not os.path.exists(out_path):
               with open(out_path, "w") as f: f.write("<!-- START_SECTION:organization -->\n<!-- END_SECTION:organization -->")
@@ -262,20 +264,21 @@ jobs:
                   date = gist['created_at'][:10]
 
                   file_path = os.path.join(folder, f"gist-{gist['id']}.md")
-                  with open(file_path, 'w', encoding='utf-8') as f:
+                  with open(file_path, 'w', encoding='utf-8', newline='\n') as f:
                       f.write(f"---\ndate: {date}\ntitle: \"{title}\"\n---\n\n")
+                      
                       if file_data.get('language') == 'Markdown':
-                          f.write(content)
+                          f.write(content.strip())
+                          f.write('\n')
                       else:
                           lang = (file_data.get('language') or "text").lower()
                           if lang == "python": lang = "py"
-
+                          
                           f.write(f'!!! example annotate "{title}"\n\n')
                           f.write(f'    ``` {{ .{lang} .copy }}\n')
-                          for line in content.splitlines():
-                              f.write(f'    {line}\n')
-                          f.write('    ```\n\n')
-                          f.write(f'[View original at GitHub]({gist["html_url"]}){{ .md-button }}')
+                          indented_content = "\n".join([f"    {line}" for line in content.splitlines()])
+                          f.write(indented_content)
+                          f.write('\n    ```\n\n')
               print(f"Sync complete. Processed {len(gists)} items.")
           else:
               print(f"FAILED: API returned {response.status_code}: {response.text}")
@@ -411,6 +414,7 @@ jobs:
                       found_tools.add(name)
           else:
               filtered, found_langs, found_tools = [], set(), set()
+              print(f"FAILED: API returned {response.status_code}: {response.text}")
 
           found_langs.add("ESPHome")
           found_langs.add("Delphi")
