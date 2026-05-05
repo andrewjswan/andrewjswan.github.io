@@ -16,7 +16,7 @@ permissions:
 jobs:
   generate-assets:
     name: 🎨 Generate Assets
-    if: github.event_name != 'workflow_dispatch'
+    if: github.event_name != 'workflow_dispatch' && github.event_name != 'push'
     uses: ./.github/workflows/generate_assets.yml
     secrets: inherit
 
@@ -175,6 +175,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          import hashlib
           import os
           import re
           import requests
