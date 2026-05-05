@@ -230,7 +230,7 @@ jobs:
 
       - name: 🐙 Sync Gists
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PROFILE }}
         run: |
           import os
           import requests
