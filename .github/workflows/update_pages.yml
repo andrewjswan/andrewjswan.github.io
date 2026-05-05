@@ -266,14 +266,15 @@ jobs:
                   file_path = os.path.join(folder, f"gist-{gist['id']}.md")
                   with open(file_path, 'w', encoding='utf-8', newline='\n') as f:
                       f.write(f"---\ndate: {date}\ntitle: \"{title}\"\n---\n\n")
-                      
+
                       if file_data.get('language') == 'Markdown':
+                          content.replace('\n|', '\n\n|')
                           f.write(content.strip())
                           f.write('\n')
                       else:
                           lang = (file_data.get('language') or "text").lower()
                           if lang == "python": lang = "py"
-                          
+
                           f.write(f'!!! example annotate "{title}"\n\n')
                           f.write(f'    ``` {{ .{lang} .copy }}\n')
                           indented_content = "\n".join([f"    {line}" for line in content.splitlines()])
