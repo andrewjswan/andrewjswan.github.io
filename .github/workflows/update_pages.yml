@@ -254,18 +254,23 @@ jobs:
                   "TIP": "tip",
                   "IMPORTANT": "abstract",  # info
                   "WARNING": "warning",
-                  "CAUTION": "danger"       # caution
+                  "CAUTION": "danger"       # failure
               }
           
-              def replace_match(match):
-                  alert_type = match.group(1).upper()
-                  mkdocs_type = mapping.get(alert_type, "note")
-                  return f"!!! {mkdocs_type}"
+              def replacement(match):
+                  raw_type = match.group(1).upper()
+                  mkdocs_type = mapping.get(raw_type, "note")
+                  content = match.group(2)
+                  
+                  fixed_content = ""
+                  for line in content.strip().split('\n'):
+                      clean_line = re.sub(r'^>\s?', '', line)
+                      fixed_content += f"    {clean_line}\n"
+                      
+                  return f"!!! {mkdocs_type}\n{fixed_content}"
           
-              return re.sub(r'^>\s+\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]', 
-                            replace_match, 
-                            text, 
-                            flags=re.M | re.I)
+              pattern = r'^>\s+\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]((?:\n^>.*)+)'
+              return re.sub(pattern, replacement, text, flags=re.M | re.I)
           
           headers = {
               "Authorization": f"token {os.getenv('GITHUB_TOKEN')}",
