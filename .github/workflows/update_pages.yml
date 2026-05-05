@@ -269,7 +269,7 @@ jobs:
                       else:
                           lang = (file_data.get('language') or "text").lower()
                           if lang == "python": lang = "py"
-                          
+
                           f.write(f'!!! example annotate "{title}"\n\n')
                           f.write(f'    ``` {{ .{lang} .copy }}\n')
                           for line in content.splitlines():
