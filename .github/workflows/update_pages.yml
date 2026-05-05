@@ -261,8 +261,8 @@ jobs:
           if response.status_code == 200:
               all_repos = response.json()
               filtered = [
-                  r for r in all_repos 
-                  if (not r['fork'] or r['name'] in include_repos) 
+                  r for r in all_repos
+                  if (not r['fork'] or r['name'] in include_repos)
                   and r['name'] not in exclude_repos
               ]
 
