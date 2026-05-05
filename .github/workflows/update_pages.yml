@@ -16,6 +16,7 @@ permissions:
 jobs:
   generate-assets:
     name: 🎨 Generate Assets
+    if: github.event_name != 'workflow_dispatch'
     uses: ./.github/workflows/generate_assets.yml
     secrets: inherit
 
