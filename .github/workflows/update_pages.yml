@@ -451,10 +451,11 @@ jobs:
 
           found_langs.add("ESPHome")
           found_langs.add("Delphi")
+
           found_tools.add("Home Assistant")
           found_tools.add("Markdown")
-          found_langs.add("Arduino")
-          found_langs.add("ESP32")
+          found_tools.add("Arduino")
+          found_tools.add("ESP32")
 
           all_badges = []
           for tech_list, config in [(sorted(found_langs), langs_config), (sorted(found_tools), tools_config)]:
