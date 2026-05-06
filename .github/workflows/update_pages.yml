@@ -391,7 +391,9 @@ jobs:
               "Arduino": {"color": "00979D", "logo": "arduino"},
               "Raspberry Pi": {"color": "C51A4A", "logo": "raspberrypi"},
               "Markdown": {"color": "000000", "logo": "markdown"},
-              "JSON": {"color": "000000", "logo": "json"}
+              "JSON": {"color": "000000", "logo": "json"},
+              "Arduino": {"color": "000000", "logo": "arduino" },
+              "ESP32": {"color": "E7352C", "logo": "espressif", "logoColor": "white" }
           }
 
           TOOL_PATTERNS = [
@@ -450,6 +452,9 @@ jobs:
           found_langs.add("ESPHome")
           found_langs.add("Delphi")
           found_tools.add("Home Assistant")
+          found_tools.add("Markdown")
+          found_langs.add("Arduino")
+          found_langs.add("ESP32")
 
           all_badges = []
           for tech_list, config in [(sorted(found_langs), langs_config), (sorted(found_tools), tools_config)]:
