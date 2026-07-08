@@ -256,19 +256,19 @@ jobs:
                   "WARNING": "warning",
                   "CAUTION": "danger"       # failure
               }
-          
+
               def replacement(match):
                   raw_type = match.group(1).upper()
                   mkdocs_type = mapping.get(raw_type, "note")
                   content = match.group(2)
-                  
+
                   fixed_content = ""
                   for line in content.strip().split('\n'):
                       clean_line = re.sub(r'^>\s?', '', line)
                       fixed_content += f"    {clean_line}\n"
-                      
+
                   return f"!!! {mkdocs_type}\n{fixed_content}"
-          
+
               pattern = r'^>\s+\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]((?:\n^>.*)+)'
               return re.sub(pattern, replacement, text, flags=re.M | re.I)
 
@@ -294,7 +294,7 @@ jobs:
                   file_path = os.path.join(folder, f"gist-{gist['id']}.md")
                   with open(file_path, 'w', encoding='utf-8', newline='\n') as f:
                       f.write(f"---\ndate: {date}\ntitle: \"{title}\"\n---\n\n")
-                      
+
                       if file_data.get('language') == 'Markdown':
                           content = convert_github_alerts(content)
                           content = re.sub(r'(!\[.*?\]\(.*?\))', r'\1{ loading=lazy }', content)
@@ -304,7 +304,7 @@ jobs:
                       else:
                           lang = (file_data.get('language') or "text").lower()
                           if lang == "python": lang = "py"
-                          
+
                           f.write(f'!!! example annotate "{title}"\n\n')
                           f.write(f'    ``` {{ .{lang} .copy }}\n')
                           for line in content.splitlines():
