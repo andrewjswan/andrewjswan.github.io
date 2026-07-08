@@ -37,7 +37,7 @@ jobs:
       max-parallel: 1
     steps:
       - name: 📥 Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: ☀️ Generate lightcard for ${{ matrix.repo }}
         uses: readme-tools/github-readme-stats-action@v1
