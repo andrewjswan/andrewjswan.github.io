@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: ☀️ Generate lightcard for ${{ matrix.repo }}
-        uses: readme-tools/github-readme-stats-action@v1
+        uses: readme-tools/github-readme-stats-action@v2
         with:
           card: pin
           options: username=${{ github.repository_owner }}&repo=${{ matrix.repo }}
@@ -48,7 +48,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🌙 Generate darkcard for ${{ matrix.repo }}
-        uses: readme-tools/github-readme-stats-action@v1
+        uses: readme-tools/github-readme-stats-action@v2
         with:
           card: pin
           options: username=${{ github.repository_owner }}&repo=${{ matrix.repo }}&bg_color=151515&title_color=fff&text_color=ccc&icon_color=526cfe&hide_border=true
