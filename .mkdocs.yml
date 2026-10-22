@@ -136,6 +136,9 @@ extra_javascript:
 
 plugins:
   - blog:
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: datetime
   - mkdocs-video
   - social:
       cards_layout: default/variant
