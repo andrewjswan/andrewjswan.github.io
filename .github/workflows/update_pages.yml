@@ -63,6 +63,7 @@ jobs:
         run: |
           pip install mkdocs-video
           pip install "mkdocs-material[imaging]"
+          pip install mkdocs-git-revision-date-localized-plugin
 
       - name: 🏅 Prepare Badges and Docs
         run: |
